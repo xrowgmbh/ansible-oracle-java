@@ -13,9 +13,11 @@
 # platform-specific variables
 #
 
-- name: set java architecture
+- name: "set java architecture"
   set_fact:
-    jdk_arch: "{{ 'i586'  if ansible_architecture == 'i386' else 'x64' }}"
+    jdk_arch: "{{ 'i586'  if  else 'x64' }}"
+  when: ansible_architecture == 'i386'
+ {{ansible_architecture}}
 
 - name: set java OS for Linux
   set_fact:
@@ -31,6 +33,11 @@
 #
 # version-specific variables
 #
+- name: set internal vars for 1.8.0_151
+  set_fact:
+    jdk_version_detail: "{{ java_version }}u{{ java_subversion }}-b12/e758a0de34e24606bca991d704f6dcbf"
+  when: java_version == 8 and java_subversion == 151
+
 - name: set internal vars for 1.8.0_112
   set_fact:
     jdk_version_detail: "{{ java_version }}u{{ java_subversion }}-b15"
@@ -152,8 +159,6 @@
 - name: set JCE download file
   set_fact:
     jce_zip_url: "http://download.oracle.com/otn-pub/java/jce/{{ java_version }}/{{ jce_zip_file }}"
-
-
 #
 # directories
 #
